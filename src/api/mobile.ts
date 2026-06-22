@@ -241,3 +241,53 @@ export function resolveAsset(token: string | null, code: string) {
     { token },
   );
 }
+
+// ── Prontuários (Records) ────────────────────────────────────────────────────
+
+export type DocumentStatus = 'available' | 'processing' | 'altered' | 'missing_info' | 'absent';
+
+export type RecordSurgery = {
+  id: string;
+  date: string;
+  name: string;
+  specialty?: string;
+  physician?: string;
+  notes?: string;
+  status: 'performed' | 'cancelled' | 'scheduled';
+  cancellationReason?: string;
+  documentType?: 'pdf' | 'image';
+  documentUrl?: string | string[] | null;
+  documentStatus?: DocumentStatus;
+  isReported?: boolean;
+  isFromFileServer?: boolean;
+};
+
+export type RecordPatient = {
+  id?: string;
+  prontuario: string;
+  name: string;
+  age?: number;
+  birthDate?: string;
+  cpf: string;
+  susNumber?: string;
+  bloodType?: string;
+  cep?: string;
+  address?: string;
+  photoUrl?: string;
+  barcodeBase?: string;
+  isNew?: boolean;
+  surgeries?: RecordSurgery[];
+};
+
+/**
+ * Busca um paciente por prontuário (≥5 dígitos) ou CPF (11 dígitos).
+ * Backend: GET /api/mobile/patients/[identifier] — mesma regra de vínculo de
+ * documentos da web (reaproveita os helpers do GET de pacientes).
+ * 404 vira ApiError(status 404) — a tela trata como "não encontrado".
+ */
+export function getPatient(token: string | null, identifier: string) {
+  return apiFetch<RecordPatient>(
+    `/api/mobile/patients/${encodeURIComponent(identifier)}`,
+    { token },
+  );
+}
