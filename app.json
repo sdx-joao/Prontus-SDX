@@ -39,7 +39,9 @@
       ]
     ],
     "extra": {
-      "eas": {}
+      "eas": {
+        "projectId": "12b7b1c5-d2c2-40d6-8cb6-886e1c3387c7"
+      }
     },
     "owner": "sdx-joao",
     "updates": {
