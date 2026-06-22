@@ -1,13 +1,11 @@
 # Codemagic — build do AAB do SDX-Prontus (Expo managed) sem usar a cota do EAS.
 # Faz: npm ci → expo prebuild (gera android/) → gradle bundleRelease assinado.
 #
-# Pré-requisitos (configurados na UI do Codemagic, grupo de variáveis "prontus"):
-#   PRONTUS_KEYSTORE_B64      base64 do keystore .jks (o MESMO do EAS, p/ a Play aceitar)
-#   PRONTUS_KEYSTORE_PASSWORD senha do keystore
-#   PRONTUS_KEY_ALIAS         alias da chave
-#   PRONTUS_KEY_PASSWORD      senha da chave
-#
-# O AAB sai assinado com a mesma chave dos v1/v2 → Play aceita como atualizacao.
+# Pré-requisito (UI do Codemagic → Code signing identities → Android keystores):
+#   Suba o keystore @sdx-joao__prontus-sdx.jks com reference name "prontus_keystore"
+#   (o MESMO keystore do EAS, p/ a Play aceitar como atualizacao dos v1/v2).
+#   Codemagic injeta automaticamente: CM_KEYSTORE_PATH, CM_KEYSTORE_PASSWORD,
+#   CM_KEY_ALIAS, CM_KEY_PASSWORD.
 
 workflows:
   sdx-prontus-android:
@@ -16,8 +14,8 @@ workflows:
     max_build_duration: 60
     environment:
       node: 20.18.0
-      groups:
-        - prontus
+      android_signing:
+        - prontus_keystore
       vars:
         # Bakeado no bundle JS durante o gradle bundleRelease (backend de producao):
         EXPO_PUBLIC_SDX_API_URL: "https://app.scandexplus.com.br"
@@ -27,17 +25,14 @@ workflows:
         script: npm ci
       - name: Expo prebuild (android)
         script: npx expo prebuild --platform android --no-install
-      - name: Decodificar keystore
-        script: |
-          echo "$PRONTUS_KEYSTORE_B64" | base64 --decode > "$CM_BUILD_DIR/prontus.jks"
       - name: Build AAB assinado
         script: |
           cd android
           ./gradlew bundleRelease \
-            -Pandroid.injected.signing.store.file="$CM_BUILD_DIR/prontus.jks" \
-            -Pandroid.injected.signing.store.password="$PRONTUS_KEYSTORE_PASSWORD" \
-            -Pandroid.injected.signing.key.alias="$PRONTUS_KEY_ALIAS" \
-            -Pandroid.injected.signing.key.password="$PRONTUS_KEY_PASSWORD"
+            -Pandroid.injected.signing.store.file="$CM_KEYSTORE_PATH" \
+            -Pandroid.injected.signing.store.password="$CM_KEYSTORE_PASSWORD" \
+            -Pandroid.injected.signing.key.alias="$CM_KEY_ALIAS" \
+            -Pandroid.injected.signing.key.password="$CM_KEY_PASSWORD"
     artifacts:
       - android/app/build/outputs/bundle/release/*.aab
     publishing:
