@@ -15,7 +15,11 @@ export const DOC_STATUS: Record<string, { label: string; color: string; ring: st
 
 export function statusKey(surgery: RecordSurgery): string {
   if (surgery.isReported) return 'reported';
-  return surgery.documentStatus ?? 'absent';
+  if (surgery.documentStatus) return surgery.documentStatus;
+  // Defensivo: se o backend não mandar documentStatus, deriva do documentUrl
+  // (documento vinculado = disponível). Mantém a bolinha/abrir doc corretos.
+  const url = Array.isArray(surgery.documentUrl) ? surgery.documentUrl[0] : surgery.documentUrl;
+  return url ? 'available' : 'absent';
 }
 
 export function isDocViewable(surgery: RecordSurgery): boolean {
