@@ -111,9 +111,9 @@ export function LoginScreen() {
               <Text style={{ color: '#1F2937', fontSize: 10.5, fontWeight: '900', letterSpacing: 1 }}>VERSÃO DE TESTE</Text>
             </View>
           )}
-          <Text style={{ marginTop: IS_TEST_BUILD ? 14 : 24, fontSize: 30, fontWeight: '800', color: '#fff', letterSpacing: -0.5 }}>Prontus-SDX</Text>
+          <Text style={{ marginTop: IS_TEST_BUILD ? 14 : 24, fontSize: 30, fontWeight: '800', color: '#fff', letterSpacing: -0.5 }}>SDX-Prontus</Text>
           <Text style={{ marginTop: 8, fontSize: 14, color: 'rgba(255,255,255,.78)', lineHeight: 21 }}>
-            {isRegister ? 'Crie seu usuário de teste para acessar o app.' : 'Insira suas credenciais para acessar o Prontus-SDX.'}
+            {isRegister ? 'Crie seu usuário de teste para acessar o app.' : 'Insira suas credenciais para acessar o SDX-Prontus.'}
           </Text>
 
           <View style={{ marginTop: 30, gap: 12 }}>
