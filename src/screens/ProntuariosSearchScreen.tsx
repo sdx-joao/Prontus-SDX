@@ -132,6 +132,9 @@ export function ProntuariosSearchScreen() {
               onChangeText={(v) => setPront(v.replace(/[^\d]/g, ''))}
               onFocus={() => setFocus('p')}
               onBlur={() => setFocus(null)}
+              onSubmitEditing={() => submit()}
+              returnKeyType="search"
+              blurOnSubmit={false}
               keyboardType="number-pad"
               placeholder="Ex.: 123456"
               placeholderTextColor={T.faint}
@@ -154,6 +157,9 @@ export function ProntuariosSearchScreen() {
               onChangeText={(v) => setCpf(maskCPF(v))}
               onFocus={() => setFocus('c')}
               onBlur={() => setFocus(null)}
+              onSubmitEditing={() => submit()}
+              returnKeyType="search"
+              blurOnSubmit={false}
               keyboardType="number-pad"
               placeholder="000.000.000-00"
               placeholderTextColor={T.faint}
