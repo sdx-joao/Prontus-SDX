@@ -5,6 +5,7 @@ import { Icon } from '../components/Icon';
 import { T } from '../theme/theme';
 
 const META: Record<string, { label: string; icon: string }> = {
+  Records: { label: 'Prontuários', icon: 'file-text' },
   Home: { label: 'Início', icon: 'home' },
   Orders: { label: 'Ordens', icon: 'clipboard' },
   Inventory: { label: 'Inventário', icon: 'package' },
