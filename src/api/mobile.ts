@@ -291,3 +291,20 @@ export function getPatient(token: string | null, identifier: string) {
     { token },
   );
 }
+
+/**
+ * Extrai o parâmetro `file` de um documentUrl do backend, no formato
+ * "/api/file-server/download?file=<faixa>/<arquivo>.pdf". Retorna null se não
+ * houver (ex.: URLs de imagens públicas /images/...).
+ */
+export function documentFileParam(documentUrl?: string | string[] | null): string | null {
+  const u = Array.isArray(documentUrl) ? documentUrl[0] : documentUrl;
+  if (!u) return null;
+  const m = u.match(/[?&]file=([^&]+)/);
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+/** URL absoluta do arquivo no endpoint mobile autenticado (usar com Bearer). */
+export function mobileFileUrl(fileParam: string): string {
+  return `${API_BASE_URL}/api/mobile/file?file=${encodeURIComponent(fileParam)}`;
+}
