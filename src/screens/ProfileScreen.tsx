@@ -72,12 +72,12 @@ export function ProfileScreen() {
           style={{ height: 48, borderRadius: 13, borderWidth: 1, borderColor: T.border, backgroundColor: T.surface, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}
         >
           <Icon name="logout" size={17} color={T.danger} />
-          <Text style={{ fontSize: 14, fontWeight: '600', color: T.danger }}>Sair do ScandexPRO™</Text>
+          <Text style={{ fontSize: 14, fontWeight: '600', color: T.danger }}>Sair do Prontus-SDX</Text>
         </Pressable>
 
         <View style={{ alignItems: 'center', gap: 8, marginTop: 22 }}>
           <Wordmark width={120} />
-          <Text style={{ fontSize: 11, color: T.faint }}>ScandexPRO™ Mobile · v1.0 · build demo</Text>
+          <Text style={{ fontSize: 11, color: T.faint }}>Prontus-SDX · Prontuários · v1.0</Text>
         </View>
       </ScrollView>
     </View>
