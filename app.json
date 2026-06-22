@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Prontus-SDX",
+    "slug": "prontus-sdx",
+    "version": "1.0.0",
+    "scheme": "prontussdx",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sdxpro.prontus"
+    },
+    "android": {
+      "package": "com.sdxpro.prontus",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "O Prontus-SDX usa a câmera para ler códigos de barras de prontuários e capturar documentos."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {}
+    },
+    "owner": "sdx-joao",
+    "updates": {
+      "enabled": false
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
