@@ -16,8 +16,6 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 type R = RouteProp<RootStackParamList, 'DocumentViewer'>;
 
 const SCREEN = Dimensions.get('window');
-const MIN_SCALE = 1;
-const MAX_SCALE = 3;
 
 export function DocumentViewerScreen() {
   const nav = useNavigation<Nav>();
@@ -34,9 +32,6 @@ export function DocumentViewerScreen() {
   const [loading, setLoading] = useState(!!fileUrl);
   const [error, setError] = useState<string | null>(null);
   const [pages, setPages] = useState<{ cur: number; total: number } | null>(null);
-  const [scale, setScale] = useState(1);
-
-  const zoom = (d: number) => setScale((s) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, +(s + d).toFixed(2))));
 
   // Baixa com Bearer (expo-file-system) e renderiza o arquivo LOCAL.
   useEffect(() => {
@@ -70,8 +65,6 @@ export function DocumentViewerScreen() {
     }
   }
 
-  const showZoom = !!localUri && !isImage && !error;
-
   return (
     <View style={{ flex: 1, backgroundColor: '#0B1020' }}>
       {/* ── Documento ocupa a tela TODA ── */}
@@ -89,12 +82,9 @@ export function DocumentViewerScreen() {
         <Pdf
           source={{ uri: localUri }}
           style={{ flex: 1, width: SCREEN.width, height: SCREEN.height, backgroundColor: '#0B1020' }}
-          scale={scale}
-          minScale={MIN_SCALE}
-          maxScale={MAX_SCALE}
+          maxScale={3}
           onLoadComplete={(total) => setPages({ cur: 1, total })}
           onPageChanged={(cur, total) => setPages({ cur, total })}
-          onScaleChanged={(s) => setScale(s)}
           onError={() => setError('Não foi possível renderizar o PDF.')}
           renderActivityIndicator={() => <ActivityIndicator size="large" color="#fff" />}
         />
@@ -118,18 +108,10 @@ export function DocumentViewerScreen() {
         )}
       </View>
 
-      {/* ── Controles flutuantes translúcidos (zoom + página) ── */}
-      {showZoom && (
-        <View style={{ position: 'absolute', bottom: insets.bottom + 20, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: 'rgba(17,24,42,0.6)', borderRadius: 999, padding: 6, borderWidth: 1, borderColor: 'rgba(255,255,255,.12)' }}>
-          <Pressable onPress={() => zoom(-0.5)} style={ctrlBtn}><Icon name="zoom-out" size={20} color="#fff" /></Pressable>
-          <Text style={{ minWidth: 46, textAlign: 'center', color: '#fff', fontSize: 12.5, fontWeight: '700' }}>{Math.round(scale * 100)}%</Text>
-          <Pressable onPress={() => zoom(0.5)} style={ctrlBtn}><Icon name="zoom-in" size={20} color="#fff" /></Pressable>
-          {pages && pages.total > 1 && (
-            <>
-              <View style={{ width: 1, height: 22, backgroundColor: 'rgba(255,255,255,.18)', marginHorizontal: 4 }} />
-              <Text style={{ minWidth: 50, textAlign: 'center', color: 'rgba(255,255,255,.9)', fontSize: 12.5, fontWeight: '700' }}>{pages.cur}/{pages.total}</Text>
-            </>
-          )}
+      {/* ── Indicador de página flutuante translúcido (sem botões) ── */}
+      {!!localUri && !isImage && !error && pages && pages.total > 1 && (
+        <View style={{ position: 'absolute', bottom: insets.bottom + 20, alignSelf: 'center', backgroundColor: 'rgba(17,24,42,0.55)', borderRadius: 999, paddingVertical: 7, paddingHorizontal: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,.12)' }}>
+          <Text style={{ color: '#fff', fontSize: 13, fontWeight: '700' }}>{pages.cur} / {pages.total}</Text>
         </View>
       )}
     </View>
@@ -137,7 +119,6 @@ export function DocumentViewerScreen() {
 }
 
 const glassBtn = { width: 38, height: 38, borderRadius: 11, backgroundColor: 'rgba(255,255,255,.16)', alignItems: 'center' as const, justifyContent: 'center' as const };
-const ctrlBtn = { width: 40, height: 40, borderRadius: 999, alignItems: 'center' as const, justifyContent: 'center' as const };
 
 function Centered({ children, insetsTop }: { children: React.ReactNode; insetsTop: number }) {
   return <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 28, paddingTop: insetsTop + 60 }}>{children}</View>;
