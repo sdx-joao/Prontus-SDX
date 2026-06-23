@@ -54,6 +54,7 @@ export function ProntuariosSearchScreen() {
   const [focus, setFocus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
+  const [notFound, setNotFound] = useState<string | null>(null);
   const keyboardHeight = useKeyboardHeight();
 
   const prontDigits = pront.replace(/\D/g, '');
@@ -65,19 +66,18 @@ export function ProntuariosSearchScreen() {
   async function submit() {
     if (!canSearch || loading) return;
     const identifier = prontValid ? prontDigits : cpfDigits;
+    setNotFound(null);
     setLoading(true);
     try {
       const patient = await getPatient(token, identifier);
       nav.navigate('PatientDetail', { patient });
     } catch (e) {
       if (e instanceof ApiError && e.status === 404) {
-        if (prontValid) {
-          nav.navigate('PatientDetail', {
-            patient: { prontuario: prontDigits, name: '', cpf: '', isNew: true, surgeries: [] },
-          });
-        } else {
-          Alert.alert('Não encontrado', 'Nenhum paciente encontrado para este CPF.');
-        }
+        setNotFound(
+          prontValid
+            ? 'Prontuário não encontrado.'
+            : 'Nenhum paciente encontrado para este CPF.',
+        );
       } else {
         Alert.alert('Erro', e instanceof Error ? e.message : 'Falha ao buscar o paciente.');
       }
@@ -129,7 +129,7 @@ export function ProntuariosSearchScreen() {
           <FieldShell icon="search" focused={focus === 'p'} valid={prontValid && focus !== 'p'}>
             <TextInput
               value={pront}
-              onChangeText={(v) => setPront(v.replace(/[^\d]/g, ''))}
+              onChangeText={(v) => { setPront(v.replace(/[^\d]/g, '')); setNotFound(null); }}
               onFocus={() => setFocus('p')}
               onBlur={() => setFocus(null)}
               onSubmitEditing={() => submit()}
@@ -154,7 +154,7 @@ export function ProntuariosSearchScreen() {
           <FieldShell icon="id-card" focused={focus === 'c'} valid={cpfValid && focus !== 'c'}>
             <TextInput
               value={cpf}
-              onChangeText={(v) => setCpf(maskCPF(v))}
+              onChangeText={(v) => { setCpf(maskCPF(v)); setNotFound(null); }}
               onFocus={() => setFocus('c')}
               onBlur={() => setFocus(null)}
               onSubmitEditing={() => submit()}
@@ -186,6 +186,19 @@ export function ProntuariosSearchScreen() {
               </>
             )}
           </Pressable>
+
+          {notFound && (
+            <View
+              style={{
+                marginTop: 16, flexDirection: 'row', alignItems: 'center', gap: 10,
+                padding: 14, borderRadius: 12,
+                backgroundColor: '#FEF3F2', borderWidth: 1, borderColor: '#FECDCA',
+              }}
+            >
+              <Icon name="alert" size={18} color="#D92D20" />
+              <Text style={{ flex: 1, fontSize: 13.5, fontWeight: '600', color: '#B42318' }}>{notFound}</Text>
+            </View>
+          )}
 
           {/* Legenda das cores */}
           <Pressable
