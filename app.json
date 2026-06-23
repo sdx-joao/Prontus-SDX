@@ -13,7 +13,7 @@
     },
     "android": {
       "package": "com.sdxpro.prontus",
-      "versionCode": 6,
+      "versionCode": 7,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -36,7 +36,8 @@
         {
           "cameraPermission": "O Prontus-SDX usa a câmera para ler códigos de barras de prontuários e capturar documentos."
         }
-      ]
+      ],
+      "@sentry/react-native"
     ],
     "extra": {
       "eas": {

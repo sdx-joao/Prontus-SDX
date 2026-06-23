@@ -20,6 +20,8 @@ workflows:
         # Bakeado no bundle JS durante o gradle bundleRelease (backend de producao):
         EXPO_PUBLIC_SDX_API_URL: "https://app.scandexplus.com.br"
         EXPO_PUBLIC_APP_ENV: "production"
+        # Sentry: nao falhar o build por falta de token de source maps (ligar depois).
+        SENTRY_DISABLE_AUTO_UPLOAD: "true"
     scripts:
       - name: Instalar dependencias
         script: npm ci
