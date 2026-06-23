@@ -16,15 +16,13 @@ workflows:
       node: 20.18.0
       android_signing:
         - prontus_keystore
-      groups:
-        - sentry   # fornece SENTRY_AUTH_TOKEN (secure)
       vars:
         # Bakeado no bundle JS durante o gradle bundleRelease (backend de producao):
         EXPO_PUBLIC_SDX_API_URL: "https://app.scandexplus.com.br"
         EXPO_PUBLIC_APP_ENV: "production"
-        # Sentry: upload de source maps (crashes legiveis).
-        SENTRY_ORG: "scandexplus"
-        SENTRY_PROJECT: "javascript-nextjs"
+        # Sentry: source maps DESLIGADOS por ora (upload derrubava o bundleRelease).
+        # Reabilitar depois com log de verdade (ver SENTRY_PROJECT/slug correto).
+        SENTRY_DISABLE_AUTO_UPLOAD: "true"
     scripts:
       - name: Instalar dependencias
         script: npm ci
