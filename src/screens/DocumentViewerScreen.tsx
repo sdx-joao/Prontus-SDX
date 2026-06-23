@@ -75,19 +75,23 @@ export function DocumentViewerScreen() {
       ) : error ? (
         <Centered insetsTop={insets.top}><Icon name="alert" size={34} color="#F87171" /><Msg>{error}</Msg></Centered>
       ) : localUri && isImage ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center' }} maximumZoomScale={4} minimumZoomScale={1} centerContent>
-          <Image source={{ uri: localUri }} style={{ width: SCREEN.width, height: SCREEN.height }} resizeMode="contain" />
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingTop: insets.top + 56 }} maximumZoomScale={4} minimumZoomScale={1} centerContent>
+          <Image source={{ uri: localUri }} style={{ width: SCREEN.width, height: SCREEN.height - insets.top - 56 }} resizeMode="contain" />
         </ScrollView>
       ) : localUri ? (
-        <Pdf
-          source={{ uri: localUri }}
-          style={{ flex: 1, width: SCREEN.width, height: SCREEN.height, backgroundColor: '#0B1020' }}
-          maxScale={3}
-          onLoadComplete={(total) => setPages({ cur: 1, total })}
-          onPageChanged={(cur, total) => setPages({ cur, total })}
-          onError={() => setError('Não foi possível renderizar o PDF.')}
-          renderActivityIndicator={() => <ActivityIndicator size="large" color="#fff" />}
-        />
+        // paddingTop = altura do header: o documento começa ABAIXO da barra,
+        // então nem no zoom out o topo escorrega pra tras das informacoes.
+        <View style={{ flex: 1, paddingTop: insets.top + 56 }}>
+          <Pdf
+            source={{ uri: localUri }}
+            style={{ flex: 1, width: SCREEN.width, backgroundColor: '#0B1020' }}
+            maxScale={3}
+            onLoadComplete={(total) => setPages({ cur: 1, total })}
+            onPageChanged={(cur, total) => setPages({ cur, total })}
+            onError={() => setError('Não foi possível renderizar o PDF.')}
+            renderActivityIndicator={() => <ActivityIndicator size="large" color="#fff" />}
+          />
+        </View>
       ) : null}
 
       {/* ── Header flutuante translúcido ── */}
